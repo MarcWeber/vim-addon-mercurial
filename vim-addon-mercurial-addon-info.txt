@@ -1,0 +1,14 @@
+{
+  "name" : "vim-addon-mercurial",
+  "version" : "0.1",
+  "author" : "Marc Weber <marco-oweber@gmx.de>",
+  "maintainer" : "Marc Weber <marco-oweber@gmx.de>",
+  "repository" : {"type": "mercurial", "url": "mercurial://mercurialhub.com/MarcWeber/vim-addon-mercurial.mercurial"},
+  "dependencies" : {
+    "vim-addon-mw-utils": {},
+    "tlib": {},
+    "vim-addon-views": {},
+    "vim-addon-goto-thing-at-cursor": {},
+  },
+  "description" : "my vim interface covering 96% of the mercurial commands I use most often"
+}
