@@ -15,13 +15,15 @@ fun! vim_addon_mercurial#HGGotoLocations()
     let list = []
     " hash ?
     try
-      if thing =~ '^[0-9a-e]\+:\?$'
-        let hash = substitute(thing,'[<:>]','','g')
-        call tovl#runtaskinbackground#System(["hg","log","-r",hash])
+      let reg_nr = '[0-9]\+'
+      let reg_hash = '[0-9a-f]\+'
+      if thing =~ '^\%('.reg_nr.'\|'.reg_hash.'\|'.reg_nr.':'.reg_hash.'\)$'
+        let hash = thing
+        call tovl#runtaskinbackground#System(["hg","log","-r".hash])
         " no failure 
         let list = [ { 'filename' : views#View('exec', ['hg','log','-p','-r', hash], 1), 'break' : 1} ]
       endif
-    catch /.*/
+    " catch /.*/
     endtry
     return list
   endif
@@ -107,15 +109,31 @@ fun! vim_addon_mercurial#BDiffSplitHG()
   " TODO: if you close the diff window call diffoff 
 endf
 
+fun! vim_addon_mercurial#RevisionFromBuf()
+  return matchstr(expand('%'),"'-r\\%(', '\\)\\?\\zs[^']*\\ze'")
+endf
+
+fun! vim_addon_mercurial#FilesHG()
+  if a:0 == 0
+    " only show about 200 commits"
+    let r = vim_addon_mercurial#RevisionFromBuf()
+    let proposal = "manifest -r ". (r == "" ? "tip" : r)
+  else
+    let proposal = "manifest -r".a:1
+  endif
+  let args = split(input("hg : ", proposal),'\s\+')
+  call views#View("exec",["hg"] + args)
+endf
+
 fun! vim_addon_mercurial#HGLog()
   if a:0 == 0
     " only show about 200 commits"
-    let proposal = "log -200"
+    let proposal = "log -l 200"
   else
     let proposal = "log ".join(a:000,' ')
   endif
-  let args = split(input("git : ", proposal),'\s\+')
-  call views#View("exec",["git"] + args)
+  let args = split(input("hg : ", proposal),'\s\+')
+  call views#View("exec",["hg"] + args)
 endf
 
 " commit buffer and helpers {{{1

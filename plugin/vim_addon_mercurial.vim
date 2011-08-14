@@ -15,7 +15,12 @@ fun! EnableHGCommands()
   " command! -nargs=0 BAddHG update|!git add %
   " command! -nargs=0 BAddHGPatch update|!git add --patch %
   " command! -nargs=0 HGInit !git init
-  " command! -nargs=* LogHG call vim_addon_git#HGLog(<f-args>)
+  "
+  "
+  command! -nargs=* LogHG    call vim_addon_mercurial#HGLog(<f-args>)
+  command! -nargs=* FilesHG  call vim_addon_mercurial#FilesHG(<f-args>)
+  command! -nargs=* HeadsDot call views#View("exec",["hg","heads","."])
+  command! -nargs=* Heads    call views#View("exec",["hg","heads"])
 
 
   " command! -nargs=0 BCommitHG update| call vim_addon_git#BCommit()
